@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import React from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./App.css";
 
 function App() {
@@ -34,24 +33,60 @@ function App() {
     generatePassword();
   }, [generatePassword]);
 
+  const inputRef = useRef(null);
+
   const copyPassword = async () => {
     await navigator.clipboard.writeText(password);
-    alert("Password copied!");
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
+  };
+  const modifyPassword = () => {
+    if (!password) return;
+
+    let characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    if (numbers) {
+      characters += "0123456789";
+    }
+
+    if (splChars) {
+      characters += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+    }
+
+    const passwordArray = password.split("");
+
+    const randomPosition = Math.floor(
+      Math.random() * passwordArray.length
+    );
+
+    const oldCharacter = passwordArray[randomPosition];
+
+    let newCharacter;
+
+    do {
+      newCharacter =
+        characters[Math.floor(Math.random() * characters.length)];
+    } while (newCharacter === oldCharacter);
+
+    passwordArray[randomPosition] = newCharacter;
+
+    setPassword(passwordArray.join(""));
   };
 
   return (
     <div className="app">
       <div className="password-card">
         <h1>Password Generator</h1>
-        <p className="subtitle">
-          Create a strong and secure password
-        </p>
+        <p className="subtitle">Create a strong and secure password</p>
 
         <div className="password-box">
           <input
             type="text"
+            ref={inputRef}
             value={password}
-            readOnly
+            onChange={(e) => setPassword(e.target.value)}
             aria-label="Generated password"
           />
 
@@ -75,7 +110,7 @@ function App() {
               id="length"
               type="range"
               min="8"
-              max="20"
+              max="2000"
               value={length}
               onChange={(e) => setLength(Number(e.target.value))}
             />
@@ -102,9 +137,18 @@ function App() {
           </div>
         </div>
 
-        <button className="generate-btn" onClick={generatePassword}>
-          Generate Password
-        </button>
+        <div className="action-buttons">
+          <button className="generate-btn" onClick={generatePassword}>
+            Generate Password
+          </button>
+          <button
+            className="modify-btn"
+            onClick={modifyPassword}
+            disabled={!password}
+          >
+            Modify Password
+          </button>
+        </div>
       </div>
     </div>
   );

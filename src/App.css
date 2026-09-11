@@ -13,6 +13,7 @@ body {
 .app {
   min-height: 100vh;
   display: flex;
+  /* flex-direction: column; */
   justify-content: center;
   align-items: center;
   padding: 20px;
@@ -156,13 +157,19 @@ input[type="range"] {
 
 /* Generate button */
 
-.generate-btn {
-  width: 100%;
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 30px;
+}
+
+.generate-btn,
+.modify-btn {
+  width: 100%;
   padding: 15px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -170,13 +177,28 @@ input[type="range"] {
   transition: 0.2s;
 }
 
-.generate-btn:hover {
+.generate-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.modify-btn {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+}
+
+.generate-btn:hover,
+.modify-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
 }
 
-.generate-btn:active {
+.generate-btn:active,
+.modify-btn:active {
   transform: translateY(0);
+}
+
+.modify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Mobile */
